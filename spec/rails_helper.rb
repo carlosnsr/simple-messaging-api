@@ -61,6 +61,8 @@ RSpec.configure do |config|
   config.filter_rails_from_backtrace!
   # arbitrary gems may also be filtered via:
   # config.filter_gems_from_backtrace("gem name")
+
+  config.include FactoryBot::Syntax::Methods
 end
 
 # Dox generates API documentation from Rspec controller/request specs
@@ -77,3 +79,5 @@ Dox.configure do |config|
   config.desc_folder_path = Rails.root.join('spec/docs/v1/descriptions')
   config.headers_whitelist = ['Accept', 'X-Auth-Token']
 end
+
+FactoryBot.find_definitions

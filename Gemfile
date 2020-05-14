@@ -42,6 +42,8 @@ end
 
 group :test do
   gem 'dox', require: false
+  gem 'factory_bot'
+  gem 'ffaker'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
