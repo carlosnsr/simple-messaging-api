@@ -5,43 +5,43 @@ Viewpoint: the client app is always operating from the sender's point of view (a
 All of the operations are from the sender's point of view
 
 1. can send short message from one user (sender) to another (recipient)
-  POST /message (re-route to /me/{from_id}/messages/to/{to_id}???)
+  POST /message (re-route to /me/{sender_id}/messages/to/{recipient_id}???)
     {
       message {
-        from,
+        sender,
         to,
         text
       }
     }
-  REPLY: :ok
+  REPLY: :created
     {
       message {
         id
         timestamp
       }
-      my_recent_uri: /to/{from_id}/messages/from/{to_id}?timestamp={timestamp}
+      my_recent_uri: /to/{sender_id}/messages/from/{recipient_id}?timestamp={timestamp}
    }
   REPLY: :error(sender doesn't exist|recipient doesn't exist|content is too large)
 
 
-  POST /me/{from_id}/messages/to/{to_id} (reroute to /message ???)
+  POST /me/{sender_id}/messages/to/{recipient_id} (reroute to /message ???)
     {
       content
     }
-  REPLY: :ok
+  REPLY: :created
     {
       message_id
       timestamp
       recipient_name
-      my_recent_uri: /to/{from_id}/messages/from/{to_id}?timestamp={timestamp}
+      my_recent_uri: /to/{sender_id}/messages/from/{recipient_id}?timestamp={timestamp}
     }
 2. recent messages requested for a recipient, from a sender
-  GET /to/{to_id}/messages/from/{from_id}?timestamp={timestamp}
+  GET /to/{recipient_id}/messages/from/{sender_id}?timestamp={timestamp}
   REPLY: :ok
     {
       sender_name,
       reply_to_uri,
-      my_recent_uri: /to/{to_id}/messages/from/{from_id}?timestamp={timestamp}
+      my_recent_uri: /to/{recipient_id}/messages/from/{sender_id}?timestamp={timestamp}
       messages [
         {
           content,
@@ -51,15 +51,15 @@ All of the operations are from the sender's point of view
       ]
     }
 3. all recent messages to recipient, from all senders
-  GET /to/{to_id}/messages?timestamp={timestamp}
+  GET /to/{recipient_id}/messages?timestamp={timestamp}
   REPLY: :ok
     [
       timestamp,
-      all_my_recent_uri: /to/{to_id}/messages?timestamp={timestamp}
+      all_my_recent_uri: /to/{recipient_id}/messages?timestamp={timestamp}
       {
         sender_name,
         reply_to_uri,
-        my_recent_uri: /to/{to_id}/messages/from/{from_id}?timestamp={timestamp}
+        my_recent_uri: /to/{recipient_id}/messages/from/{sender_id}?timestamp={timestamp}
         messages [
           {
             content,
