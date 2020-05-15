@@ -28,7 +28,7 @@ This message will show up in that recipient's recent messages.
     + text: `Hello` (text, required)
 
 + Request returns the message id and timestamp
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=Synth retro quinoa viral helvetica master cleanse fap high life.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=High life tumblr VHS Brooklyn iPhone helvetica fixie.`
 
     + Headers
 
@@ -46,12 +46,12 @@ This message will show up in that recipient's recent messages.
             {
               "message": {
                 "id": 1,
-                "timestamp": "2020-05-15T20:28:40.534Z"
+                "timestamp": "2020-05-15T21:06:20.876Z"
               }
             }
 
 + Request returns an error, if recipient_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Farm-to-table Portland mustache PBR echo park party.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Party aesthetic PBR letterpress trust fund craft beer lo-fi mixtape you probably haven't heard of them.`
 
     + Headers
 
@@ -71,7 +71,7 @@ This message will show up in that recipient's recent messages.
             }
 
 + Request returns an error, if sender_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Austin leggings next level Banksy master cleanse skateboard tattooed.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Portland gentrify VHS photo booth leggings.`
 
     + Headers
 
@@ -139,14 +139,14 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Shoreditch Rerry Richardson irony art stumptown Banksy master cleanse.",
-                  "timestamp": "2020-05-15T20:28:40.564Z"
+                  "text": "Irony mlkshk art aesthetic fap messenger bag twee viral.",
+                  "timestamp": "2020-05-15T21:06:20.910Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Farm-to-table skateboard art before they sold out helvetica 8-bit.",
-                  "timestamp": "2020-05-14T20:28:40.567Z"
+                  "text": "Put a bird on it lomo blog gentrify squid.",
+                  "timestamp": "2020-05-14T21:06:20.931Z"
                 }
               ]
             }
@@ -197,14 +197,14 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Squid cred vegan raw denim messenger bag.",
-                  "timestamp": "2020-05-15T20:28:40.633Z"
+                  "text": "Aesthetic seitan lomo gluten-free echo park banh mi viral fixie.",
+                  "timestamp": "2020-05-15T21:06:20.949Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Sartorial organic mustache craft beer skateboard tofu readymade you probably haven't heard of them cardigan.",
-                  "timestamp": "2020-05-14T20:28:40.636Z"
+                  "text": "Seitan beard helvetica art master cleanse squid.",
+                  "timestamp": "2020-05-14T21:06:20.951Z"
                 }
               ]
             }
@@ -281,8 +281,63 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Marfa wolf trust fund cardigan iPhone food truck.",
-                  "timestamp": "2020-05-15T20:28:40.679Z"
+                  "text": "Etsy irony keytar butcher Wes Anderson echo park master cleanse trust fund.",
+                  "timestamp": "2020-05-15T21:06:20.981Z"
+                }
+              ]
+            }
+
+### Get recent messages from sender (alternative) [GET /api/v1/recipents/{recipient_id}/sender/{sender_id}/messages]
+An alternative way to get a recipient's messages from a particular user.
+Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}&sender_id={sender_id}`.
+
++ Parameters
+    + recipient_id: `123` (number, required)
+    + sender_id: `456` (number, required)
+
++ Request returns empty array of messages if no messages from that sender
+**GET**&nbsp;&nbsp;`/api/v1/recipients/1/senders/3/messages`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
++ Response 200
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "messages": [
+            
+              ]
+            }
+
++ Request returns all messages from that sender
+**GET**&nbsp;&nbsp;`/api/v1/recipients/1/senders/2/messages`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
++ Response 200
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "messages": [
+                {
+                  "sender_id": 2,
+                  "recipient_id": 1,
+                  "text": "Messenger bag helvetica cliche Portland you probably haven't heard of them.",
+                  "timestamp": "2020-05-15T21:06:21.002Z"
                 }
               ]
             }
