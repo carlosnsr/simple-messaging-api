@@ -1,24 +1,35 @@
-# README
+# Simple Messaging API
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+A simple messaging API done for my [Guild Education] technical test.
 
-Things you may want to cover:
+[Guild Education]: https://www.guildeducation.com/
 
-* Ruby version
+## Configuration
 
-* System dependencies
+### Installation
 
-* Configuration
+```
+bundle
+```
 
-* Database creation
+### Database creation
 
-* Database initialization
+```
+rails db:migrate
+```
 
-* How to run the test suite
+## To run
 
-* Services (job queues, cache servers, search engines, etc.)
+```
+rails server
+```
 
-* Deployment instructions
+It is now running on `localhost:3000`
 
-* ...
+## Test suite
+
+To run the included test suite:
+
+```
+rspec
+```
