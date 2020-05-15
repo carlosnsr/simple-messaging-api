@@ -127,6 +127,17 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
       )
     end
   end
+
+  context "for a recipient that doesn't exist" do
+    let(:recipient) { build(:user, id: 1234) }
+    it 'returns an error' do
+      get path
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response.body).to eq(
+        { error: "recipient #{recipient.id} does not exist" }.to_json
+      )
+    end
+  end
 end
 
 RSpec.describe 'Messages', type: :request do

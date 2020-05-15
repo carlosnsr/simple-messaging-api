@@ -18,9 +18,11 @@ class MessagesController < ApplicationController
 
   # Get all the messages for the given recipient
   def index
-    recipient = User.find(recipient_params)
     messages = recipient.messages.collect { |message| serialize_message(message) }
     render status: :ok, json: { messages: messages }
+  rescue ActiveRecord::RecordNotFound => e
+    render status: :unprocessable_entity,
+      json: { error: "recipient #{params[:recipient_id]} does not exist" }
   end
 
   private
@@ -31,6 +33,10 @@ class MessagesController < ApplicationController
     params.require(:message).require(:text)
 
     params.require(:message).permit(:sender_id, :recipient_id, :text)
+  end
+
+  def recipient
+    @recipient ||= User.find(recipient_params)
   end
 
   def recipient_params
