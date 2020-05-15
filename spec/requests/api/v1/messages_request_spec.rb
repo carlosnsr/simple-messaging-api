@@ -112,7 +112,7 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
         {
           messages: [
             returned_message(message),
-            returned_message(older_message),
+            returned_message(older_message)
           ]
         }.to_json
       )
@@ -152,15 +152,40 @@ RSpec.describe 'Api::V1::Messages', type: :request do
   end
 end
 
-RSpec.describe 'Api::V1::Recipient/Messages', type: :request do
+RSpec.describe 'Api::V1::Recipients/Messages', type: :request do
   include Docs::V1::Messages::Api
 
-  describe 'GET /recipient/{recipient_id}/messages' do
+  describe 'GET /recipients/{recipient_id}/messages' do
     include Docs::V1::Messages::IndexByUrl
 
     let(:path) { api_v1_recipient_messages_path(recipient_id: recipient.id) }
 
     include_examples 'retrieve_recipient_messages'
+  end
+end
+
+RSpec.shared_examples 'retrieve_filtered_recipient_messages' do
+  let(:recipient) { create(:user) }
+  let(:sender) { create(:user) }
+
+  context 'recipient with no messages from that sender' do
+    let(:other_sender) { create(:user) }
+
+    it 'returns empty array of messages if no messages from that sender', :dox do
+      create(:message, recipient: recipient, sender: other_sender)
+      get path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to eq({ messages: [] }.to_json)
+    end
+  end
+
+  context 'recipient with messages from that sender' do
+    let!(:message) { create(:message, recipient: recipient, sender: sender) }
+    it 'returns all messages from that sender', :dox do
+      get path
+      expect(response).to have_http_status(:ok)
+      expect(response.body).to eq({ messages: [returned_message(message)] }.to_json)
+    end
   end
 end
 
@@ -170,29 +195,26 @@ RSpec.describe 'Api::V1::Messages', type: :request do
   describe 'GET /messages?recipient_id&sender_id' do
     include Docs::V1::Messages::IndexFiltered
 
-    let(:recipient) { create(:user) }
-    let(:sender) { create(:user) }
     let(:valid_params) { { recipient_id: recipient.id, sender_id: sender.id } }
     let(:path) { api_v1_messages_path(params: valid_params) }
 
-    context 'recipient with no messages from that sender' do
-      let(:other_sender) { create(:user) }
+    include_examples 'retrieve_filtered_recipient_messages'
+  end
+end
 
-      it 'returns empty array of messages if no messages from that sender', :dox do
-        create(:message, recipient: recipient, sender: other_sender)
-        get path
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to eq({ messages: [] }.to_json)
-      end
+RSpec.describe 'Api::V1::Recipients/Senders/Messages', type: :request do
+  include Docs::V1::Messages::Api
+
+  describe 'GET /recipients/{recipient_id}/senders/{sender_id}/messages' do
+    include Docs::V1::Messages::IndexByUrlFiltered
+
+    let(:path) do
+      api_v1_recipient_sender_messages_path(
+        recipient_id: recipient.id,
+        sender_id: sender.id
+      )
     end
 
-    context 'recipient with messages from that sender' do
-      let!(:message) { create(:message, recipient: recipient, sender: sender) }
-      it 'returns all messages from that sender', :dox do
-        get path
-        expect(response).to have_http_status(:ok)
-        expect(response.body).to eq({ messages: [returned_message(message)] }.to_json)
-      end
-    end
+    include_examples 'retrieve_filtered_recipient_messages'
   end
 end

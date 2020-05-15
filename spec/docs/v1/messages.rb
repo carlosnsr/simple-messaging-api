@@ -60,6 +60,17 @@ module Docs
         end
       end
 
+      document :index_by_url_filtered do
+        action 'Get recent messages from sender (alternative)' do
+          params FILTERED_INDEX_PARAMS
+          path '/api/v1/recipents/{recipient_id}/sender/{sender_id}/messages'
+          desc <<~DESC
+            An alternative way to get a recipient's messages from a particular user.
+            Same behavior and results as `#{FILTERED_INDEX_PATH}`.
+          DESC
+        end
+      end
+
       POST_PARAMS = {
         recipient_id: { type: :number, required: :required, value: 123 },
         sender_id: { type: :number, required: :required, value: 456 },

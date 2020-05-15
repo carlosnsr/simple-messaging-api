@@ -1,11 +1,15 @@
 # frozen_string_literal: true
 
 Rails.application.routes.draw do
+  concern :recent_messagable do
+    resources :messages, only: [:index]
+  end
+
   concern :api_base do
     resources :messages, only: [:create, :index]
 
-    resources :recipients, only: [] do
-      resources :messages, only: [:index]
+    resources :recipients, only: [], concerns: :recent_messagable do
+      resources :senders, only: [], concerns: :recent_messagable
     end
   end
 
