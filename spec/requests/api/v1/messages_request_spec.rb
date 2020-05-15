@@ -2,6 +2,15 @@
 
 require 'rails_helper'
 
+def returned_message(message)
+  {
+    sender_id: message.sender.id,
+    recipient_id: message.recipient.id,
+    text: message.text,
+    timestamp: message.created_at
+  }
+end
+
 RSpec.describe 'Api::V1::Messages', type: :request do
   include Docs::V1::Messages::Api
 
@@ -76,15 +85,6 @@ end
 RSpec.shared_examples 'retrieve_recipient_messages' do
   let(:recipient) { create(:user) }
 
-  def returned_message(message)
-    {
-      sender_id: message.sender.id,
-      recipient_id: message.recipient.id,
-      text: message.text,
-      timestamp: message.created_at
-    }
-  end
-
   context 'recipient with no messages' do
     it 'is successful' do
       get path
@@ -142,7 +142,7 @@ end
 RSpec.describe 'Api::V1::Messages', type: :request do
   include Docs::V1::Messages::Api
 
-  describe 'GET /messages?=recipient_id' do
+  describe 'GET /messages?recipient_id' do
     include Docs::V1::Messages::Index
 
     let(:valid_params) { { recipient_id: recipient.id } }
@@ -161,5 +161,34 @@ RSpec.describe 'Api::V1::Recipient/Messages', type: :request do
     let(:path) { api_v1_recipient_messages_path(recipient_id: recipient.id) }
 
     include_examples 'retrieve_recipient_messages'
+  end
+end
+
+RSpec.describe 'Api::V1::Messages', type: :request do
+  describe 'GET /messages?recipient_id&sender_id' do
+    let(:recipient) { create(:user) }
+    let(:sender) { create(:user) }
+    let(:valid_params) { { recipient_id: recipient.id, sender_id: sender.id } }
+    let(:path) { api_v1_messages_path(params: valid_params) }
+
+    context 'recipient with no messages from that sender' do
+      let(:other_sender) { create(:user) }
+
+      it 'returns empty array of messages' do
+        create(:message, recipient: recipient, sender: other_sender)
+        get path
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq({ messages: [] }.to_json)
+      end
+    end
+
+    context 'recipient with messages from that sender' do
+      let!(:message) { create(:message, recipient: recipient, sender: sender) }
+      it 'returns all messages from that sender' do
+        get path
+        expect(response).to have_http_status(:ok)
+        expect(response.body).to eq({ messages: [returned_message(message)] }.to_json)
+      end
+    end
   end
 end

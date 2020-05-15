@@ -20,9 +20,12 @@ class Api::V1::MessagesController < ApplicationController
   # NOTE: Each recipient has only the most recent 30 days of messages
   MAXIMUM_MESSAGES = 100
   def index
-    messages = recipient.messages.take(MAXIMUM_MESSAGES)
+    messages = filtered_recipient_messages
+      .take(MAXIMUM_MESSAGES)
       .collect { |message| serialize_message(message) }
     render status: :ok, json: { messages: messages }
+  rescue ActionController::ParameterMissing => e
+    render status: :unprocessable_entity, json: { error: e.message }
   rescue ActiveRecord::RecordNotFound => e
     render status: :unprocessable_entity,
       json: { error: "recipient #{params[:recipient_id]} does not exist" }
@@ -44,6 +47,14 @@ class Api::V1::MessagesController < ApplicationController
 
   def recipient_params
     params.require(:recipient_id)
+  end
+
+  def filtered_recipient_messages
+    if params[:sender_id]
+      recipient.messages.where(sender_id: params[:sender_id])
+    else
+      recipient.messages
+    end
   end
 
   def serialize_message(message)
