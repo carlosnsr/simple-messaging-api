@@ -7,7 +7,7 @@ A simple messaging API done for my [Guild Education] technical test.
 ## Documentation
 
 Documentation describing this project is available in
-[Markdown](./public/api/v1/apispec.md) and [HTML](./public/api/v1/index.html).
+[HTML](https://carlosnsr.github.io/simple-messaging-api)
 
 Documentation is generated from the RSpec examples, using [Dox](https://github.com/infinum/dox).
 
