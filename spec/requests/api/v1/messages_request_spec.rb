@@ -13,11 +13,9 @@ RSpec.describe 'Api::V1::Messages', type: :request do
     let(:text) { FFaker::HipsterIpsum.phrase }
     let(:valid_params) do
       {
-        message: {
-          sender_id: sender.id,
-          recipient_id: recipient.id,
-          text: text
-        }
+        sender_id: sender.id,
+        recipient_id: recipient.id,
+        text: text
       }
     end
 
@@ -33,7 +31,7 @@ RSpec.describe 'Api::V1::Messages', type: :request do
           .to change { Message.count }.by(1)
       end
 
-      it 'returns the message id and timestamp' do
+      it 'returns the message id and timestamp', :dox do
         post api_v1_messages_path(params: valid_params)
         last_message = Message.all.last
         expect(response.body).to eq(
@@ -49,50 +47,28 @@ RSpec.describe 'Api::V1::Messages', type: :request do
 
     # If any of these params (sender_id, recipient_id, text) is missing,
     # return an error pointing out the missing item
+    RSpec.shared_examples 'missing_parameter' do |key|
+      context "no #{key}" do
+        let(:new_params) { valid_params.reject { |k, _v| k == key } }
+
+        it "returns an error, if #{key} is missing", :dox do
+          post api_v1_messages_path(params: new_params)
+          expect(response).to have_http_status(:unprocessable_entity)
+          expect(response.body).to eq(
+            { error: "param is missing or the value is empty: #{key}" }.to_json
+          )
+        end
+      end
+    end
+
     context 'if any required parameter is missing' do
       around(:example) do |example|
         expect(&example).not_to change { Message.count }
       end
 
-      def clone_without_key(key, orig)
-        { message: orig[:message].reject { |k, _v| k == key } }
-      end
-
-      context 'no recipient_id' do
-        let(:params_no_recipient) { clone_without_key(:recipient_id, valid_params) }
-
-        it 'returns an error' do
-          post api_v1_messages_path(params: params_no_recipient)
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to eq(
-            { error: 'param is missing or the value is empty: recipient_id' }.to_json
-          )
-        end
-      end
-
-      context 'no sender_id' do
-        let(:params_no_sender) { clone_without_key(:sender_id, valid_params) }
-
-        it 'returns an error' do
-          post api_v1_messages_path(params: params_no_sender)
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to eq(
-            { error: 'param is missing or the value is empty: sender_id' }.to_json
-          )
-        end
-      end
-
-      context 'no text' do
-        let(:params_no_text) { clone_without_key(:text, valid_params) }
-
-        it 'returns an error' do
-          post api_v1_messages_path(params: params_no_text)
-          expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to eq(
-            { error: 'param is missing or the value is empty: text' }.to_json
-          )
-        end
-      end
+      include_examples 'missing_parameter', :recipient_id
+      include_examples 'missing_parameter', :sender_id
+      include_examples 'missing_parameter', :text
     end
   end
 end

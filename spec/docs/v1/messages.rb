@@ -13,11 +13,12 @@ module Docs
       GET_PARAMS = {
         recipient_id: { type: :number, required: :required, value: 123 }
       }.freeze
+      INDEX_PATH = '/api/v1/messages?recipient_id={recipient_id}'.freeze
 
       document :index do
         action "Get recipient's recent messages" do
           params GET_PARAMS
-          path '/api/v1/messages?recipient_id={recipient_id}'
+          path INDEX_PATH
           desc <<~DESC
             Provided a recipient's ID, gets messages that were sent to that recipient.
 
@@ -28,11 +29,12 @@ module Docs
       end
 
       document :index_by_url do
-        action "Get recipient's recent messages (direct url)" do
+        action "Get recipient's recent messages (alternative)" do
           params GET_PARAMS
           path '/api/v1/recipents/{recipient_id}/messages'
           desc <<~DESC
-            An alternate way to get a recipient's messages.
+            An alternative way to get a recipient's messages.
+            Same behavior and results as `#{INDEX_PATH}`.
           DESC
         end
       end
