@@ -10,31 +10,52 @@ module Docs
         end
       end
 
-      GET_PARAMS = {
+      INDEX_PARAMS = {
         recipient_id: { type: :number, required: :required, value: 123 }
       }.freeze
       INDEX_PATH = '/api/v1/messages?recipient_id={recipient_id}'.freeze
 
       document :index do
-        action "Get recipient's recent messages" do
-          params GET_PARAMS
+        action 'Get recent messages' do
+          params INDEX_PARAMS
           path INDEX_PATH
           desc <<~DESC
             Provided a recipient's ID, gets messages that were sent to that recipient.
 
-            Gets the first 100 of the recipient's most recent messages,
+            Gets the first 100 most recent messages,
             no older than 30 days, and ordered most-recent-first.
           DESC
         end
       end
 
       document :index_by_url do
-        action "Get recipient's recent messages (alternative)" do
-          params GET_PARAMS
+        action 'Get recent messages (alternative)' do
+          params INDEX_PARAMS
           path '/api/v1/recipents/{recipient_id}/messages'
           desc <<~DESC
             An alternative way to get a recipient's messages.
             Same behavior and results as `#{INDEX_PATH}`.
+          DESC
+        end
+      end
+
+      FILTERED_INDEX_PARAMS = {
+        recipient_id: { type: :number, required: :required, value: 123 },
+        sender_id: { type: :number, required: :required, value: 456 }
+      }.freeze
+      FILTERED_INDEX_PATH = "#{INDEX_PATH}&sender_id={sender_id}".freeze
+
+      document :index_filtered do
+        action 'Get recent messages from sender' do
+          params FILTERED_INDEX_PARAMS
+          path FILTERED_INDEX_PATH
+          desc <<~DESC
+            Provided a recipient's ID and a sender's ID,
+            gets messages that were sent to that recipient.
+            by that sender.
+
+            Gets the first 100 most recent messages,
+            no older than 30 days, and ordered most-recent-first.
           DESC
         end
       end
@@ -46,8 +67,12 @@ module Docs
       }.freeze
 
       document :post do
-        action 'Post a message, from a sender to a recipient' do
+        action 'Send a message' do
           params POST_PARAMS
+          desc <<~DESC
+            Saves a short text message, from a sender to a recipient.
+            This message will show up in that recipient's recent messages.
+          DESC
         end
       end
     end
