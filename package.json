@@ -1,0 +1,9 @@
+{
+  "name": "simple_messaging_api",
+  "version": "0.0.1",
+  "author": "Carlos Rodrigues <carlos.all.mail@gmail.com> (https://github.com/carlosnsr)",
+  "license": "MIT",
+  "devDependencies": {
+    "aglio": "^2.3.0"
+  }
+}
