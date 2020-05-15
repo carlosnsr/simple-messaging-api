@@ -4,6 +4,23 @@ A simple messaging API done for my [Guild Education] technical test.
 
 [Guild Education]: https://www.guildeducation.com/
 
+## Documentation
+
+Documentation describing this project is available in
+[Markdown](./public/api/v1/apispec.md) and [HTML](./public/api/v1/index.html).
+
+Documentation is generated from the RSpec examples, using [Dox](https://github.com/infinum/dox).
+
+To regenerate the documentation:
+```
+$ rails api:docs:html`
+```
+
+To regenerate and view the documentation
+```
+$ rails api:docs:open`
+```
+
 ## Configuration
 
 ### Dependencies
@@ -26,22 +43,22 @@ bundle
 #### Developer Installation
 
 ```
-bundle
+$ bundle
 
 # installs aglio for generating documentation
-yarn
+$ yarn
 ```
 
 ### Database creation
 
 ```
-rails db:migrate
+$ rails db:migrate
 ```
 
 ## To run
 
 ```
-rails server
+$ rails server
 ```
 
 It is now running on `localhost:3000`
@@ -51,5 +68,5 @@ It is now running on `localhost:3000`
 To run the included test suite:
 
 ```
-rspec
+$ rspec
 ```
