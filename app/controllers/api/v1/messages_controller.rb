@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Users can create new messages.
-class MessagesController < ApplicationController
+class Api::V1::MessagesController < ApplicationController
   # Each message must have a sender, a recipient, and a text message
   def create
     message = Message.new(message_params)
@@ -31,11 +31,11 @@ class MessagesController < ApplicationController
   private
 
   def message_params
-    params.require(:message).require(:sender_id)
-    params.require(:message).require(:recipient_id)
-    params.require(:message).require(:text)
+    params.require(:sender_id)
+    params.require(:recipient_id)
+    params.require(:text)
 
-    params.require(:message).permit(:sender_id, :recipient_id, :text)
+    params.permit(:sender_id, :recipient_id, :text)
   end
 
   def recipient
