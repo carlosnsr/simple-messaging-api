@@ -165,7 +165,11 @@ RSpec.describe 'Api::V1::Recipient/Messages', type: :request do
 end
 
 RSpec.describe 'Api::V1::Messages', type: :request do
+  include Docs::V1::Messages::Api
+
   describe 'GET /messages?recipient_id&sender_id' do
+    include Docs::V1::Messages::IndexFiltered
+
     let(:recipient) { create(:user) }
     let(:sender) { create(:user) }
     let(:valid_params) { { recipient_id: recipient.id, sender_id: sender.id } }
@@ -174,7 +178,7 @@ RSpec.describe 'Api::V1::Messages', type: :request do
     context 'recipient with no messages from that sender' do
       let(:other_sender) { create(:user) }
 
-      it 'returns empty array of messages' do
+      it 'returns empty array of messages if no messages from that sender', :dox do
         create(:message, recipient: recipient, sender: other_sender)
         get path
         expect(response).to have_http_status(:ok)
@@ -184,7 +188,7 @@ RSpec.describe 'Api::V1::Messages', type: :request do
 
     context 'recipient with messages from that sender' do
       let!(:message) { create(:message, recipient: recipient, sender: sender) }
-      it 'returns all messages from that sender' do
+      it 'returns all messages from that sender', :dox do
         get path
         expect(response).to have_http_status(:ok)
         expect(response.body).to eq({ messages: [returned_message(message)] }.to_json)
