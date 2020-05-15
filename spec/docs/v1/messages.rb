@@ -17,11 +17,22 @@ module Docs
       document :index do
         action "Get recipient's recent messages" do
           params GET_PARAMS
+          path '/api/v1/messages?recipient_id={recipient_id}'
           desc <<~DESC
             Provided a recipient's ID, gets messages that were sent to that recipient.
 
             Gets the first 100 of the recipient's most recent messages,
             no older than 30 days, and ordered most-recent-first.
+          DESC
+        end
+      end
+
+      document :index_by_url do
+        action "Get recipient's recent messages (direct url)" do
+          params GET_PARAMS
+          path '/api/v1/recipents/{recipient_id}/messages'
+          desc <<~DESC
+            An alternate way to get a recipient's messages.
           DESC
         end
       end

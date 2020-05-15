@@ -153,7 +153,7 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
 
   context "recipient that doesn't exist" do
     let(:recipient) { build(:user, id: 1234) }
-    it 'returns an error' do
+    it 'returns an error if the recipient does not exist', :dox do
       get path
       expect(response).to have_http_status(:unprocessable_entity)
       expect(response.body).to eq(
@@ -177,7 +177,11 @@ RSpec.describe 'Api::V1::Messages', type: :request do
 end
 
 RSpec.describe 'Api::V1::Recipient/Messages', type: :request do
+  include Docs::V1::Messages::Api
+
   describe 'GET /recipient/{recipient_id}/messages' do
+    include Docs::V1::Messages::IndexByUrl
+
     let(:path) { api_v1_recipient_messages_path(recipient_id: recipient.id) }
 
     include_examples 'retrieve_recipient_messages'
