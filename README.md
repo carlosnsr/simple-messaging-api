@@ -55,6 +55,12 @@ $ yarn
 $ rails db:migrate
 ```
 
+### Database initialization
+
+```
+$ rails db:seed
+```
+
 ## To run
 
 ```
