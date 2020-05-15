@@ -3,7 +3,11 @@
 require 'rails_helper'
 
 RSpec.describe 'Api::V1::Messages', type: :request do
+  include Docs::V1::Messages::Api
+
   describe 'POST' do
+    include Docs::V1::Messages::Post
+
     let(:sender) { create(:user) }
     let(:recipient) { create(:user) }
     let(:text) { FFaker::HipsterIpsum.phrase }
@@ -96,6 +100,15 @@ end
 RSpec.shared_examples 'retrieve_recipient_messages' do
   let(:recipient) { create(:user) }
 
+  def returned_message(message)
+    {
+      sender_id: message.sender.id,
+      recipient_id: message.recipient.id,
+      text: message.text,
+      timestamp: message.created_at
+    }
+  end
+
   context 'recipient with no messages' do
     it 'is successful' do
       get path
@@ -108,20 +121,22 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
     end
   end
 
-  context 'recipient with a message' do
+  context 'recipient with messages' do
     let!(:message) { create(:message, recipient: recipient) }
+    let!(:older_message) do
+      create(:message, recipient: recipient) do |message|
+        message.created_at = 1.day.ago
+        message.save
+      end
+    end
 
-    it 'returns the message' do
+    it 'returns the message', :dox do
       get path
       expect(response.body).to eq(
         {
           messages: [
-            {
-              sender_id: message.sender.id,
-              recipient_id: message.recipient.id,
-              text: message.text,
-              timestamp: message.created_at
-            }
+            returned_message(message),
+            returned_message(older_message),
           ]
         }.to_json
       )
@@ -149,7 +164,11 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
 end
 
 RSpec.describe 'Api::V1::Messages', type: :request do
+  include Docs::V1::Messages::Api
+
   describe 'GET /messages?=recipient_id' do
+    include Docs::V1::Messages::Index
+
     let(:valid_params) { { recipient_id: recipient.id } }
     let(:path) { api_v1_messages_path(params: valid_params) }
 
