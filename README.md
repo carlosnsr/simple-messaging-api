@@ -6,8 +6,20 @@ A simple messaging API done for my [Guild Education] technical test.
 
 ## Documentation
 
-Documentation describing this project is available in
+Documentation describing this project and API is available in
 [HTML](https://carlosnsr.github.io/simple-messaging-api)
+
+In brief, the following end-points are exposed:
+- to create messages
+  - POST `/api/v1/messages`
+- to get a recipient's recent messages
+  - GET `/api/v1/messages`
+  - GET `/api/v1/recipents/:id/messages`
+- to get a recipient's recent messages from a particular sender
+  - GET `/api/v1/messages`
+  - GET `/api/v1/recipents/:id/sender/:id/messages`
+
+### Generation
 
 Documentation is generated from the RSpec examples, using [Dox](https://github.com/infinum/dox).
 
@@ -64,6 +76,10 @@ Until the API supports user creation, this creates a few users to play with.
 ```
 $ rails db:seed
 ```
+
+By default, it creates on first being run:
+- Bill Murray, id: 1
+- Tina Fey, id: 2
 
 Alternatively, one can create new users by using:
 
