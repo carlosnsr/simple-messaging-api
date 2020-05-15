@@ -2,7 +2,7 @@
 
 require 'rails_helper'
 
-RSpec.describe 'Messages', type: :request do
+RSpec.describe 'Api::V1::Messages', type: :request do
   describe 'POST' do
     let(:sender) { create(:user) }
     let(:recipient) { create(:user) }
@@ -20,17 +20,17 @@ RSpec.describe 'Messages', type: :request do
     # Given valid parameters, create it and return the message's id and timestamp
     context 'given a sender, a recipient, and text' do
       it 'is successful' do
-        post messages_path(params: valid_params)
+        post api_v1_messages_path(params: valid_params)
         expect(response).to have_http_status(:created)
       end
 
       it 'saves creates the message' do
-        expect { post messages_path(params: valid_params) }
+        expect { post api_v1_messages_path(params: valid_params) }
           .to change { Message.count }.by(1)
       end
 
       it 'returns the message id and timestamp' do
-        post messages_path(params: valid_params)
+        post api_v1_messages_path(params: valid_params)
         last_message = Message.all.last
         expect(response.body).to eq(
           {
@@ -58,7 +58,7 @@ RSpec.describe 'Messages', type: :request do
         let(:params_no_recipient) { clone_without_key(:recipient_id, valid_params) }
 
         it 'returns an error' do
-          post messages_path(params: params_no_recipient)
+          post api_v1_messages_path(params: params_no_recipient)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to eq(
             { error: 'param is missing or the value is empty: recipient_id' }.to_json
@@ -70,7 +70,7 @@ RSpec.describe 'Messages', type: :request do
         let(:params_no_sender) { clone_without_key(:sender_id, valid_params) }
 
         it 'returns an error' do
-          post messages_path(params: params_no_sender)
+          post api_v1_messages_path(params: params_no_sender)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to eq(
             { error: 'param is missing or the value is empty: sender_id' }.to_json
@@ -82,7 +82,7 @@ RSpec.describe 'Messages', type: :request do
         let(:params_no_text) { clone_without_key(:text, valid_params) }
 
         it 'returns an error' do
-          post messages_path(params: params_no_text)
+          post api_v1_messages_path(params: params_no_text)
           expect(response).to have_http_status(:unprocessable_entity)
           expect(response.body).to eq(
             { error: 'param is missing or the value is empty: text' }.to_json
@@ -148,19 +148,19 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
   end
 end
 
-RSpec.describe 'Messages', type: :request do
+RSpec.describe 'Api::V1::Messages', type: :request do
   describe 'GET /messages?=recipient_id' do
     let(:valid_params) { { recipient_id: recipient.id } }
-    let(:path) { messages_path(params: valid_params) }
+    let(:path) { api_v1_messages_path(params: valid_params) }
 
     include_examples 'retrieve_recipient_messages'
   end
 end
 
-RSpec.describe 'Recipient/Messages', type: :request do
+RSpec.describe 'Api::V1::Recipient/Messages', type: :request do
   describe 'GET /recipient/{recipient_id}/messages' do
-    let(:path) { recipient_messages_path(recipient_id: recipient.id) }
+    let(:path) { api_v1_recipient_messages_path(recipient_id: recipient.id) }
 
-    include_examples 'retrieve_recipient_messages', :recipient_messages_path
+    include_examples 'retrieve_recipient_messages'
   end
 end

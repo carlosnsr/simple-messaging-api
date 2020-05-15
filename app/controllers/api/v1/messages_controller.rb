@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 # Users can create new messages.
-class MessagesController < ApplicationController
+class Api::V1::MessagesController < ApplicationController
   # Each message must have a sender, a recipient, and a text message
   def create
     message = Message.new(message_params)
