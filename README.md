@@ -13,12 +13,12 @@ Documentation is generated from the RSpec examples, using [Dox](https://github.c
 
 To regenerate the documentation:
 ```
-$ rails api:docs:html`
+$ rails api:docs:html
 ```
 
 To regenerate and view the documentation
 ```
-$ rails api:docs:open`
+$ rails api:docs:open
 ```
 
 ## Configuration
@@ -33,6 +33,7 @@ $ rails api:docs:open`
 As above, and:
 
 * Node v12.16.3
+* Yarn v1.22.4
 
 ### Installation
 
@@ -44,10 +45,11 @@ bundle
 
 ```
 $ bundle
-
-# installs aglio for generating documentation
 $ yarn
 ```
+
+The difference in installation is that `yarn` installs `aglio` which is used for
+generating documentation.
 
 ### Database creation
 
@@ -55,10 +57,20 @@ $ yarn
 $ rails db:migrate
 ```
 
-### Database initialization
+#### Create users to play with
+
+Until the API supports user creation, this creates a few users to play with.
 
 ```
 $ rails db:seed
+```
+
+Alternatively, one can create new users by using:
+
+```
+$ rails console
+>> User.create(name: 'Amazing Name').save
+>> User.all            # Lists all created users
 ```
 
 ## To run
