@@ -19,6 +19,7 @@ namespace :api do
 
     task html: :md do
       `yarn run aglio -i #{MD_OUTPUT} -o #{HTML_OUTPUT}`
+      `cp #{HTML_OUTPUT} #{Rails.root.join('docs', 'index.html')}`
     end
 
     task open: :html do
