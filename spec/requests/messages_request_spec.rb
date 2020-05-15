@@ -96,7 +96,7 @@ end
 RSpec.shared_examples 'retrieve_recipient_messages' do
   let(:recipient) { create(:user) }
 
-  context 'for a recipient with no messages' do
+  context 'recipient with no messages' do
     it 'is successful' do
       get path
       expect(response).to have_http_status(:ok)
@@ -108,7 +108,7 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
     end
   end
 
-  context 'for a recipient with a message' do
+  context 'recipient with a message' do
     let!(:message) { create(:message, recipient: recipient) }
 
     it 'returns the found message' do
@@ -128,7 +128,7 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
     end
   end
 
-  context "for a recipient that doesn't exist" do
+  context "recipient that doesn't exist" do
     let(:recipient) { build(:user, id: 1234) }
     it 'returns an error' do
       get path
