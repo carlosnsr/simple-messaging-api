@@ -111,7 +111,7 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
   context 'recipient with a message' do
     let!(:message) { create(:message, recipient: recipient) }
 
-    it 'returns the found message' do
+    it 'returns the message' do
       get path
       expect(response.body).to eq(
         {
@@ -125,6 +125,14 @@ RSpec.shared_examples 'retrieve_recipient_messages' do
           ]
         }.to_json
       )
+    end
+  end
+
+  context 'recipient with over 100 messages' do
+    it 'returns only the first 100 messages' do
+      create_list(:message, 150, recipient: recipient)
+      get path
+      expect(JSON.parse(response.body)['messages'].count).to eq(100)
     end
   end
 

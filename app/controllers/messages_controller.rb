@@ -16,9 +16,12 @@ class MessagesController < ApplicationController
     render status: :unprocessable_entity, json: { error: e.message }
   end
 
-  # Get all the messages for the given recipient
+  # Get the messages (up to the maximum) for the given recipient
+  # NOTE: Each recipient has only the most recent 30 days of messages
+  MAXIMUM_MESSAGES = 100
   def index
-    messages = recipient.messages.collect { |message| serialize_message(message) }
+    messages = recipient.messages.take(MAXIMUM_MESSAGES)
+      .collect { |message| serialize_message(message) }
     render status: :ok, json: { messages: messages }
   rescue ActiveRecord::RecordNotFound => e
     render status: :unprocessable_entity,
