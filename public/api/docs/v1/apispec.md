@@ -3,11 +3,14 @@
 This is a very simple messaging API.
 It enables the building of a very simple messenger application.
 
+Currently, it does not provide the creation of users.
+
 ## Operations
 
 It allows these operations centered around `Messages`
-- sending a short message between 2 existing users
-- getting the most recent (in last 30 days, up to 100)messages sent to a user (a.k.a. `recipient`)
+- sending a short message between 2 existing users (a sender, and a recipient)
+- getting a recipient's most recent messages (in last 30 days, up to 100) from any sender
+- getting a recipient's most recent messages (in last 30 days, up to 100) from a particular sender
 
 # Group Messages
 
@@ -15,7 +18,9 @@ It allows these operations centered around `Messages`
 ## Messages [/messages]
 
 
-### Post a message, from a sender to a recipient [POST /api/v1/messages]
+### Send a message [POST /api/v1/messages]
+Saves a short text message, from a sender to a recipient.
+This message will show up in that recipient's recent messages.
 
 + Parameters
     + recipient_id: `123` (number, required)
@@ -23,7 +28,7 @@ It allows these operations centered around `Messages`
     + text: `Hello` (text, required)
 
 + Request returns the message id and timestamp
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=Mcsweeney's Wayfarers sustainable trust fund whatever vegan salvia iPhone.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=Synth retro quinoa viral helvetica master cleanse fap high life.`
 
     + Headers
 
@@ -41,12 +46,12 @@ It allows these operations centered around `Messages`
             {
               "message": {
                 "id": 1,
-                "timestamp": "2020-05-15T18:42:28.756Z"
+                "timestamp": "2020-05-15T20:28:40.534Z"
               }
             }
 
 + Request returns an error, if recipient_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Whatever twee Rerry Richardson salvia you probably haven't heard of them.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Farm-to-table Portland mustache PBR echo park party.`
 
     + Headers
 
@@ -66,7 +71,7 @@ It allows these operations centered around `Messages`
             }
 
 + Request returns an error, if sender_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Dreamcatcher biodiesel brunch vinyl fap trust fund bicycle rights vice.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Austin leggings next level Banksy master cleanse skateboard tattooed.`
 
     + Headers
 
@@ -105,10 +110,10 @@ It allows these operations centered around `Messages`
               "error": "param is missing or the value is empty: text"
             }
 
-### Get recipient's recent messages [GET /api/v1/messages?recipient_id={recipient_id}]
+### Get recent messages [GET /api/v1/messages?recipient_id={recipient_id}]
 Provided a recipient's ID, gets messages that were sent to that recipient.
 
-Gets the first 100 of the recipient's most recent messages,
+Gets the first 100 most recent messages,
 no older than 30 days, and ordered most-recent-first.
 
 + Parameters
@@ -134,14 +139,14 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Diy Austin Carles blog Marfa viral brunch.",
-                  "timestamp": "2020-05-15T18:42:28.786Z"
+                  "text": "Shoreditch Rerry Richardson irony art stumptown Banksy master cleanse.",
+                  "timestamp": "2020-05-15T20:28:40.564Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Organic Wes Anderson fanny pack Carles tumblr.",
-                  "timestamp": "2020-05-14T18:42:28.788Z"
+                  "text": "Farm-to-table skateboard art before they sold out helvetica 8-bit.",
+                  "timestamp": "2020-05-14T20:28:40.567Z"
                 }
               ]
             }
@@ -165,7 +170,7 @@ no older than 30 days, and ordered most-recent-first.
               "error": "recipient 1234 does not exist"
             }
 
-### Get recipient's recent messages (alternative) [GET /api/v1/recipents/{recipient_id}/messages]
+### Get recent messages (alternative) [GET /api/v1/recipents/{recipient_id}/messages]
 An alternative way to get a recipient's messages.
 Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
 
@@ -192,14 +197,14 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Synth keffiyeh gluten-free echo park twee mustache letterpress jean shorts master cleanse.",
-                  "timestamp": "2020-05-15T18:42:28.807Z"
+                  "text": "Squid cred vegan raw denim messenger bag.",
+                  "timestamp": "2020-05-15T20:28:40.633Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Scenester photo booth sartorial next level cred.",
-                  "timestamp": "2020-05-14T18:42:28.809Z"
+                  "text": "Sartorial organic mustache craft beer skateboard tofu readymade you probably haven't heard of them cardigan.",
+                  "timestamp": "2020-05-14T20:28:40.636Z"
                 }
               ]
             }
@@ -221,4 +226,63 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
 
             {
               "error": "recipient 1234 does not exist"
+            }
+
+### Get recent messages from sender [GET /api/v1/messages?recipient_id={recipient_id}&sender_id={sender_id}]
+Provided a recipient's ID and a sender's ID,
+gets messages that were sent to that recipient.
+by that sender.
+
+Gets the first 100 most recent messages,
+no older than 30 days, and ordered most-recent-first.
+
++ Parameters
+    + recipient_id: `123` (number, required)
+    + sender_id: `456` (number, required)
+
++ Request returns empty array of messages if no messages from that sender
+**GET**&nbsp;&nbsp;`/api/v1/messages?recipient_id=1&sender_id=3`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
++ Response 200
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "messages": [
+            
+              ]
+            }
+
++ Request returns all messages from that sender
+**GET**&nbsp;&nbsp;`/api/v1/messages?recipient_id=1&sender_id=2`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
++ Response 200
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "messages": [
+                {
+                  "sender_id": 2,
+                  "recipient_id": 1,
+                  "text": "Marfa wolf trust fund cardigan iPhone food truck.",
+                  "timestamp": "2020-05-15T20:28:40.679Z"
+                }
+              ]
             }
