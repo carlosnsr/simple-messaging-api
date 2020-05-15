@@ -16,6 +16,13 @@ class MessagesController < ApplicationController
     render status: :unprocessable_entity, json: { error: e.message }
   end
 
+  # Get all the messages for the given recipient
+  def index
+    recipient = User.find(recipient_params)
+    messages = recipient.messages.collect { |message| serialize_message(message) }
+    render status: :ok, json: { messages: messages }
+  end
+
   private
 
   def message_params
@@ -24,5 +31,18 @@ class MessagesController < ApplicationController
     params.require(:message).require(:text)
 
     params.require(:message).permit(:sender_id, :recipient_id, :text)
+  end
+
+  def recipient_params
+    params.require(:recipient_id)
+  end
+
+  def serialize_message(message)
+    {
+      sender_id: message.sender.id,
+      recipient_id: message.recipient.id,
+      text: message.text,
+      timestamp: message.created_at
+    }
   end
 end

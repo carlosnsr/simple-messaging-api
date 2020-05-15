@@ -92,3 +92,56 @@ RSpec.describe 'Messages', type: :request do
     end
   end
 end
+
+RSpec.shared_examples 'retrieve_recipient_messages' do
+  let(:recipient) { create(:user) }
+
+  context 'for a recipient with no messages' do
+    it 'is successful' do
+      get path
+      expect(response).to have_http_status(:ok)
+    end
+
+    it 'returns empty array of messages' do
+      get path
+      expect(response.body).to eq({ messages: [] }.to_json)
+    end
+  end
+
+  context 'for a recipient with a message' do
+    let!(:message) { create(:message, recipient: recipient) }
+
+    it 'returns the found message' do
+      get path
+      expect(response.body).to eq(
+        {
+          messages: [
+            {
+              sender_id: message.sender.id,
+              recipient_id: message.recipient.id,
+              text: message.text,
+              timestamp: message.created_at
+            }
+          ]
+        }.to_json
+      )
+    end
+  end
+end
+
+RSpec.describe 'Messages', type: :request do
+  describe 'GET /messages?=recipient_id' do
+    let(:valid_params) { { recipient_id: recipient.id } }
+    let(:path) { messages_path(params: valid_params) }
+
+    include_examples 'retrieve_recipient_messages'
+  end
+end
+
+RSpec.describe 'Recipient/Messages', type: :request do
+  describe 'GET /recipient/{recipient_id}/messages' do
+    let(:path) { recipient_messages_path(recipient_id: recipient.id) }
+
+    include_examples 'retrieve_recipient_messages', :recipient_messages_path
+  end
+end
