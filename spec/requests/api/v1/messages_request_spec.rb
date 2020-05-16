@@ -22,9 +22,11 @@ RSpec.describe 'Api::V1::Messages', type: :request do
     let(:text) { FFaker::HipsterIpsum.phrase }
     let(:valid_params) do
       {
-        sender_id: sender.id,
-        recipient_id: recipient.id,
-        text: text
+        message: {
+          sender_id: sender.id,
+          recipient_id: recipient.id,
+          text: text
+        }
       }
     end
 
@@ -58,14 +60,14 @@ RSpec.describe 'Api::V1::Messages', type: :request do
     # return an error pointing out the missing item
     RSpec.shared_examples 'missing_parameter' do |key|
       context "no #{key}" do
-        let(:new_params) { valid_params.reject { |k, _v| k == key } }
+        let(:new_params) do
+          { message: valid_params[:message].reject { |k, _v| k == key } }
+        end
 
         it "returns an error, if #{key} is missing", :dox do
           post api_v1_messages_path(params: new_params)
           expect(response).to have_http_status(:unprocessable_entity)
-          expect(response.body).to eq(
-            { error: "param is missing or the value is empty: #{key}" }.to_json
-          )
+          expect(JSON.parse(response.body)["errors"]).not_to be_empty
         end
       end
     end

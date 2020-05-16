@@ -10,10 +10,10 @@ class Api::V1::MessagesController < ApplicationController
         message: { id: message.id, timestamp: message.created_at }
       }
     else
-      render status: :unprocessable_entity, json: message.errors
+      render status: :unprocessable_entity, json: {
+        errors: message.errors.full_messages
+      }
     end
-  rescue ActionController::ParameterMissing => e
-    render status: :unprocessable_entity, json: { error: e.message }
   end
 
   # Get the messages (up to the maximum) for the given recipient
@@ -27,18 +27,15 @@ class Api::V1::MessagesController < ApplicationController
   rescue ActionController::ParameterMissing => e
     render status: :unprocessable_entity, json: { error: e.message }
   rescue ActiveRecord::RecordNotFound => e
-    render status: :unprocessable_entity,
-      json: { error: "recipient #{params[:recipient_id]} does not exist" }
+    render status: :unprocessable_entity, json: {
+      error: "recipient #{params[:recipient_id]} does not exist"
+    }
   end
 
   private
 
   def message_params
-    params.require(:sender_id)
-    params.require(:recipient_id)
-    params.require(:text)
-
-    params.permit(:sender_id, :recipient_id, :text)
+    params.require(:message).permit(:sender_id, :recipient_id, :text)
   end
 
   def recipient

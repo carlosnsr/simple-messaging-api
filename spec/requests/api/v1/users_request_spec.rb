@@ -36,9 +36,7 @@ RSpec.describe "Api::V1::Users", type: :request do
       it 'returns an error, if name is missing', :dox do
         post path
         expect(response).to have_http_status(:unprocessable_entity)
-        expect(response.body).to eq({ errors: [
-          { name: [ "can't be blank" ]}
-        ]}.to_json)
+        expect(response.body).to eq({ errors: [ "Name can't be blank" ]}.to_json)
       end
     end
   end

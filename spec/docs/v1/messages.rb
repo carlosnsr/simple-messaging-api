@@ -72,9 +72,9 @@ module Docs
       end
 
       POST_PARAMS = {
-        recipient_id: { type: :number, required: :required, value: 123 },
-        sender_id: { type: :number, required: :required, value: 456 },
-        text: { type: :text, required: :required, value: 'Hello' }
+        "message.recipient_id": { type: :number, required: :required, value: 123 },
+        "message.sender_id": { type: :number, required: :required, value: 456 },
+        "message.text": { type: :text, required: :required, value: 'Hello' }
       }.freeze
 
       document :post do

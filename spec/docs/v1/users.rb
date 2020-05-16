@@ -10,10 +10,14 @@ module Docs
         end
       end
 
+      POST_PARAMS = {
+        "user.name": { type: :string, required: :required, value: FFaker::Name.name }
+      }.freeze
       POST_PATH = '/api/v1/users'.freeze
 
       document :post do
         action 'Create a user' do
+          params POST_PARAMS
           path POST_PATH
           desc <<~DESC
             Provided with a name, creates a user with that name.

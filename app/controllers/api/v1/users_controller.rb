@@ -6,8 +6,9 @@ class Api::V1::UsersController < ApplicationController
     if user.save
       render status: :created, json: { user: { id: user.id }}
     else
-      render status: :unprocessable_entity,
-        json: { errors: Array.wrap(user.errors) }
+      render status: :unprocessable_entity, json: {
+        errors: user.errors.full_messages
+      }
     end
   end
 
