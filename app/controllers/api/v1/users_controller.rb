@@ -12,6 +12,12 @@ class Api::V1::UsersController < ApplicationController
     end
   end
 
+  def index
+    render status: :ok, json: {
+      users: User.all.collect{ |user| { id: user.id, name: user.name } }
+    }
+  end
+
   private
 
   def user_params

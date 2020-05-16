@@ -7,7 +7,7 @@ Rails.application.routes.draw do
 
   concern :api_base do
     resources :messages, only: [:create, :index]
-    resources :users, only: :create
+    resources :users, only: [:create, :index]
 
     resources :recipients, only: [], concerns: :recent_messagable do
       resources :senders, only: [], concerns: :recent_messagable
