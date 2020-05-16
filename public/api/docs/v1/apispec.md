@@ -7,6 +7,7 @@ It enables the building of a very simple messenger application.
 
 It allows these operations:
 - creating users
+- getting a list of all existing users
 - sending a short message between 2 existing users (a sender, and a recipient)
 - getting a recipient's most recent messages (in last 30 days, up to 100) from any sender
 - getting a recipient's most recent messages (in last 30 days, up to 100) from a particular sender
@@ -27,7 +28,7 @@ This message will show up in that recipient's recent messages.
     + message.text: `Hello` (text, required)
 
 + Request returns the message id and timestamp
-**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[sender_id]=1&message[text]=Beard seitan Austin put a bird on it 8-bit photo booth mlkshk Cosby Sweater fixie.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[sender_id]=1&message[text]=Thundercats beard Shoreditch Austin cardigan hoodie tattooed PBR.`
 
     + Headers
 
@@ -45,12 +46,12 @@ This message will show up in that recipient's recent messages.
             {
               "message": {
                 "id": 1,
-                "timestamp": "2020-05-16T02:45:06.011Z"
+                "timestamp": "2020-05-16T03:08:19.439Z"
               }
             }
 
 + Request returns an error, if recipient_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?message[sender_id]=1&message[text]=Keffiyeh twee retro cred tumblr.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[sender_id]=1&message[text]=Fixie biodiesel Four Loko cred whatever freegan scenester Brooklyn vinyl.`
 
     + Headers
 
@@ -73,7 +74,7 @@ This message will show up in that recipient's recent messages.
             }
 
 + Request returns an error, if sender_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[text]=Whatever hoodie American Apparel scenester chambray  1.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[text]=Brunch Carles yr tattooed salvia mustache fixie 8-bit wolf.`
 
     + Headers
 
@@ -146,14 +147,14 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Freegan Austin blog Rerry Richardson squid.",
-                  "timestamp": "2020-05-16T02:45:06.052Z"
+                  "text": "Lomo keytar Austin yr chambray raw denim blog viral.",
+                  "timestamp": "2020-05-16T03:08:19.482Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Tumblr helvetica Marfa +1 next level before they sold out Wes Anderson vinyl fap.",
-                  "timestamp": "2020-05-15T02:45:06.054Z"
+                  "text": "Master cleanse tofu biodiesel Banksy skateboard DIY gentrify.",
+                  "timestamp": "2020-05-15T03:08:19.484Z"
                 }
               ]
             }
@@ -204,14 +205,14 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Cosby sweater retro moon photo booth wolf Rerry Richardson trust fund.",
-                  "timestamp": "2020-05-16T02:45:06.075Z"
+                  "text": "Portland Banksy fixie vice mixtape VHS Marfa lomo organic.",
+                  "timestamp": "2020-05-16T03:08:19.504Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Wolf VHS yr dreamcatcher blog hoodie DIY.",
-                  "timestamp": "2020-05-15T02:45:06.078Z"
+                  "text": "Cred before they sold out viral Four Loko Carles lo-fi squid freegan.",
+                  "timestamp": "2020-05-15T03:08:19.506Z"
                 }
               ]
             }
@@ -288,8 +289,8 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Tofu mlkshk cardigan Brooklyn retro mustache gentrify stumptown.",
-                  "timestamp": "2020-05-16T02:45:06.125Z"
+                  "text": "Pbr cred fanny pack whatever Wes Anderson chambray cliche moon biodiesel.",
+                  "timestamp": "2020-05-16T03:08:19.551Z"
                 }
               ]
             }
@@ -343,8 +344,8 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}&sende
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Vegan mlkshk Banksy leggings stumptown mustache organic American Apparel.",
-                  "timestamp": "2020-05-16T02:45:06.147Z"
+                  "text": "Twee DIY Four Loko fanny pack Carles mlkshk vice.",
+                  "timestamp": "2020-05-16T03:08:19.572Z"
                 }
               ]
             }
@@ -361,10 +362,10 @@ Provided with a name, creates a user with that name.
 Returns the user's ID
 
 + Parameters
-    + user.name: `Agustina+Gaylord` (string, required)
+    + user.name: `Margeret+Fritsch` (string, required)
 
 + Request returns the new user's id
-**POST**&nbsp;&nbsp;`/api/v1/users?user[name]=Sherlene Doyle`
+**POST**&nbsp;&nbsp;`/api/v1/users?user[name]=Armida Lehner`
 
     + Headers
 
@@ -404,5 +405,37 @@ Returns the user's ID
             {
               "errors": [
                 "Name can't be blank"
+              ]
+            }
+
+### Get users [GET /api/v1/users]
+Returns a list of all the users currently in the system
+
+
++ Request returns a list of users
+**GET**&nbsp;&nbsp;`/api/v1/users`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+
++ Response 200
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "users": [
+                {
+                  "id": 1,
+                  "name": "Cecily Weber"
+                },
+                {
+                  "id": 2,
+                  "name": "Dianne Goldner"
+                }
               ]
             }

@@ -12,6 +12,8 @@ Documentation describing this project and API is available in
 In brief, the following end-points are exposed:
 - to create users
   - POST `/api/v1/users`
+- to get a list of all existing users
+  - GET `/api/v1/users`
 - to create messages
   - POST `/api/v1/messages`
 - to get a recipient's recent messages

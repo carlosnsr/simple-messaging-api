@@ -26,6 +26,17 @@ module Docs
           DESC
         end
       end
+
+      INDEX_PATH = POST_PATH.freeze
+
+      document :index do
+        action 'Get users' do
+          path INDEX_PATH
+          desc <<~DESC
+            Returns a list of all the users currently in the system
+          DESC
+        end
+      end
     end
   end
 end
