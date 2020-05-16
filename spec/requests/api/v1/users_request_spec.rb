@@ -43,7 +43,11 @@ RSpec.describe 'Api::V1::Users', type: :request do
 end
 
 RSpec.describe 'Api::V1::Users', type: :request do
+  include Docs::V1::Users::Api
+
   describe 'GET index' do
+    include Docs::V1::Users::Index
+
     let(:path) { api_v1_users_path }
 
     # Given valid parameters, create it and return the user's id
@@ -58,7 +62,7 @@ RSpec.describe 'Api::V1::Users', type: :request do
     context 'users exist' do
       let!(:users) { create_list(:user, 2) }
 
-      it 'returns a list of users' do
+      it 'returns a list of users', :dox do
         get path
         expect(response.body).to eq({
           users: users.collect{ |user| { id: user.id, name: user.name } }
