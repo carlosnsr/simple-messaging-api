@@ -1,7 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe "Api::V1::Users", type: :request do
+  include Docs::V1::Users::Api
+
   describe 'POST' do
+    include Docs::V1::Users::Post
+
     let(:path) { api_v1_users_path(params: call_params) }
 
     # Given valid parameters, create it and return the user's id
@@ -13,7 +17,7 @@ RSpec.describe "Api::V1::Users", type: :request do
         expect(response).to have_http_status(:created)
       end
 
-      it "returns the new user's id" do
+      it "returns the new user's id", :dox do
         post path
         created_user = User.find_by(name: call_params[:user][:name])
         expect(response.body).to  eq({ user: { id: created_user.id }}.to_json)
