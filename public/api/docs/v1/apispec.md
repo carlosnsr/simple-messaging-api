@@ -22,12 +22,12 @@ Saves a short text message, from a sender to a recipient.
 This message will show up in that recipient's recent messages.
 
 + Parameters
-    + recipient_id: `123` (number, required)
-    + sender_id: `456` (number, required)
-    + text: `Hello` (text, required)
+    + message.recipient_id: `123` (number, required)
+    + message.sender_id: `456` (number, required)
+    + message.text: `Hello` (text, required)
 
 + Request returns the message id and timestamp
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=Stumptown Williamsburg banh mi VHS craft beer mixtape.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[sender_id]=1&message[text]=Beard seitan Austin put a bird on it 8-bit photo booth mlkshk Cosby Sweater fixie.`
 
     + Headers
 
@@ -45,12 +45,12 @@ This message will show up in that recipient's recent messages.
             {
               "message": {
                 "id": 1,
-                "timestamp": "2020-05-16T02:13:05.386Z"
+                "timestamp": "2020-05-16T02:45:06.011Z"
               }
             }
 
 + Request returns an error, if recipient_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Blog Marfa messenger bag letterpress whatever Wes Anderson Shoreditch brunch.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[sender_id]=1&message[text]=Keffiyeh twee retro cred tumblr.`
 
     + Headers
 
@@ -66,11 +66,14 @@ This message will show up in that recipient's recent messages.
     + Body
 
             {
-              "error": "param is missing or the value is empty: recipient_id"
+              "errors": [
+                "Recipient must exist",
+                "Recipient can't be blank"
+              ]
             }
 
 + Request returns an error, if sender_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Food truck locavore master cleanse hoodie lo-fi biodiesel.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[text]=Whatever hoodie American Apparel scenester chambray  1.`
 
     + Headers
 
@@ -86,11 +89,14 @@ This message will show up in that recipient's recent messages.
     + Body
 
             {
-              "error": "param is missing or the value is empty: sender_id"
+              "errors": [
+                "Sender must exist",
+                "Sender can't be blank"
+              ]
             }
 
 + Request returns an error, if text is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1`
+**POST**&nbsp;&nbsp;`/api/v1/messages?message[recipient_id]=2&message[sender_id]=1`
 
     + Headers
 
@@ -106,7 +112,9 @@ This message will show up in that recipient's recent messages.
     + Body
 
             {
-              "error": "param is missing or the value is empty: text"
+              "errors": [
+                "Text can't be blank"
+              ]
             }
 
 ### Get recent messages [GET /api/v1/messages?recipient_id={recipient_id}]
@@ -138,14 +146,14 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Wes anderson trust fund iPhone beard Wayfarers before they sold out +1 retro.",
-                  "timestamp": "2020-05-16T02:13:05.443Z"
+                  "text": "Freegan Austin blog Rerry Richardson squid.",
+                  "timestamp": "2020-05-16T02:45:06.052Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Cardigan you probably haven't heard of them messenger bag butcher skateboard keffiyeh 8-bit.",
-                  "timestamp": "2020-05-15T02:13:05.445Z"
+                  "text": "Tumblr helvetica Marfa +1 next level before they sold out Wes Anderson vinyl fap.",
+                  "timestamp": "2020-05-15T02:45:06.054Z"
                 }
               ]
             }
@@ -196,14 +204,14 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Retro cliche messenger bag mixtape put a bird on it chambray farm-to-table Austin vice.",
-                  "timestamp": "2020-05-16T02:13:05.465Z"
+                  "text": "Cosby sweater retro moon photo booth wolf Rerry Richardson trust fund.",
+                  "timestamp": "2020-05-16T02:45:06.075Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Vice tattooed viral farm-to-table high life.",
-                  "timestamp": "2020-05-15T02:13:05.468Z"
+                  "text": "Wolf VHS yr dreamcatcher blog hoodie DIY.",
+                  "timestamp": "2020-05-15T02:45:06.078Z"
                 }
               ]
             }
@@ -280,8 +288,8 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Food truck stumptown master cleanse quinoa leggings.",
-                  "timestamp": "2020-05-16T02:13:05.497Z"
+                  "text": "Tofu mlkshk cardigan Brooklyn retro mustache gentrify stumptown.",
+                  "timestamp": "2020-05-16T02:45:06.125Z"
                 }
               ]
             }
@@ -335,8 +343,8 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}&sende
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Craft beer tofu PBR keffiyeh banh mi twee skateboard ethical.",
-                  "timestamp": "2020-05-16T02:13:05.520Z"
+                  "text": "Vegan mlkshk Banksy leggings stumptown mustache organic American Apparel.",
+                  "timestamp": "2020-05-16T02:45:06.147Z"
                 }
               ]
             }
@@ -352,9 +360,11 @@ Provided with a name, creates a user with that name.
 
 Returns the user's ID
 
++ Parameters
+    + user.name: `Agustina+Gaylord` (string, required)
 
 + Request returns the new user's id
-**POST**&nbsp;&nbsp;`/api/v1/users?user[name]=Ardell Christiansen`
+**POST**&nbsp;&nbsp;`/api/v1/users?user[name]=Sherlene Doyle`
 
     + Headers
 
@@ -393,10 +403,6 @@ Returns the user's ID
 
             {
               "errors": [
-                {
-                  "name": [
-                    "can't be blank"
-                  ]
-                }
+                "Name can't be blank"
               ]
             }
