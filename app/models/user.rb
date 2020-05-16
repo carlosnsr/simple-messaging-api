@@ -7,4 +7,6 @@ class User < ApplicationRecord
     # only the most recent 30 days' worth of messages
     -> { where(created_at: 30.days.ago..).order(created_at: :desc) },
     foreign_key: :recipient_id
+
+  validates :name, presence: true
 end

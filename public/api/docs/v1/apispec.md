@@ -3,11 +3,10 @@
 This is a very simple messaging API.
 It enables the building of a very simple messenger application.
 
-Currently, it does not provide the creation of users.
-
 ## Operations
 
-It allows these operations centered around `Messages`
+It allows these operations:
+- creating users
 - sending a short message between 2 existing users (a sender, and a recipient)
 - getting a recipient's most recent messages (in last 30 days, up to 100) from any sender
 - getting a recipient's most recent messages (in last 30 days, up to 100) from a particular sender
@@ -28,7 +27,7 @@ This message will show up in that recipient's recent messages.
     + text: `Hello` (text, required)
 
 + Request returns the message id and timestamp
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=High life tumblr VHS Brooklyn iPhone helvetica fixie.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&sender_id=1&text=Stumptown Williamsburg banh mi VHS craft beer mixtape.`
 
     + Headers
 
@@ -46,12 +45,12 @@ This message will show up in that recipient's recent messages.
             {
               "message": {
                 "id": 1,
-                "timestamp": "2020-05-15T21:06:20.876Z"
+                "timestamp": "2020-05-16T02:13:05.386Z"
               }
             }
 
 + Request returns an error, if recipient_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Party aesthetic PBR letterpress trust fund craft beer lo-fi mixtape you probably haven't heard of them.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?sender_id=1&text=Blog Marfa messenger bag letterpress whatever Wes Anderson Shoreditch brunch.`
 
     + Headers
 
@@ -71,7 +70,7 @@ This message will show up in that recipient's recent messages.
             }
 
 + Request returns an error, if sender_id is missing
-**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Portland gentrify VHS photo booth leggings.`
+**POST**&nbsp;&nbsp;`/api/v1/messages?recipient_id=2&text=Food truck locavore master cleanse hoodie lo-fi biodiesel.`
 
     + Headers
 
@@ -139,14 +138,14 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Irony mlkshk art aesthetic fap messenger bag twee viral.",
-                  "timestamp": "2020-05-15T21:06:20.910Z"
+                  "text": "Wes anderson trust fund iPhone beard Wayfarers before they sold out +1 retro.",
+                  "timestamp": "2020-05-16T02:13:05.443Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Put a bird on it lomo blog gentrify squid.",
-                  "timestamp": "2020-05-14T21:06:20.931Z"
+                  "text": "Cardigan you probably haven't heard of them messenger bag butcher skateboard keffiyeh 8-bit.",
+                  "timestamp": "2020-05-15T02:13:05.445Z"
                 }
               ]
             }
@@ -197,14 +196,14 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}`.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Aesthetic seitan lomo gluten-free echo park banh mi viral fixie.",
-                  "timestamp": "2020-05-15T21:06:20.949Z"
+                  "text": "Retro cliche messenger bag mixtape put a bird on it chambray farm-to-table Austin vice.",
+                  "timestamp": "2020-05-16T02:13:05.465Z"
                 },
                 {
                   "sender_id": 3,
                   "recipient_id": 1,
-                  "text": "Seitan beard helvetica art master cleanse squid.",
-                  "timestamp": "2020-05-14T21:06:20.951Z"
+                  "text": "Vice tattooed viral farm-to-table high life.",
+                  "timestamp": "2020-05-15T02:13:05.468Z"
                 }
               ]
             }
@@ -281,8 +280,8 @@ no older than 30 days, and ordered most-recent-first.
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Etsy irony keytar butcher Wes Anderson echo park master cleanse trust fund.",
-                  "timestamp": "2020-05-15T21:06:20.981Z"
+                  "text": "Food truck stumptown master cleanse quinoa leggings.",
+                  "timestamp": "2020-05-16T02:13:05.497Z"
                 }
               ]
             }
@@ -336,8 +335,68 @@ Same behavior and results as `/api/v1/messages?recipient_id={recipient_id}&sende
                 {
                   "sender_id": 2,
                   "recipient_id": 1,
-                  "text": "Messenger bag helvetica cliche Portland you probably haven't heard of them.",
-                  "timestamp": "2020-05-15T21:06:21.002Z"
+                  "text": "Craft beer tofu PBR keffiyeh banh mi twee skateboard ethical.",
+                  "timestamp": "2020-05-16T02:13:05.520Z"
+                }
+              ]
+            }
+
+# Group Users
+
+
+## Users [/users]
+
+
+### Create a user [POST /api/v1/users]
+Provided with a name, creates a user with that name.
+
+Returns the user's ID
+
+
++ Request returns the new user's id
+**POST**&nbsp;&nbsp;`/api/v1/users?user[name]=Ardell Christiansen`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+            Content-Type: application/x-www-form-urlencoded
+
++ Response 201
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "user": {
+                "id": 1
+              }
+            }
+
++ Request returns an error, if name is missing
+**POST**&nbsp;&nbsp;`/api/v1/users?user[not_name]=Ummm... Hi`
+
+    + Headers
+
+            Accept: text/xml,application/xml,application/xhtml+xml,text/html;q=0.9,text/plain;q=0.8,image/png,*/*;q=0.5
+            Content-Type: application/x-www-form-urlencoded
+
++ Response 422
+
+    + Headers
+
+            Content-Type: application/json; charset=utf-8
+
+    + Body
+
+            {
+              "errors": [
+                {
+                  "name": [
+                    "can't be blank"
+                  ]
                 }
               ]
             }

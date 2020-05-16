@@ -10,6 +10,8 @@ Documentation describing this project and API is available in
 [HTML](https://carlosnsr.github.io/simple-messaging-api)
 
 In brief, the following end-points are exposed:
+- to create users
+  - POST `/api/v1/users`
 - to create messages
   - POST `/api/v1/messages`
 - to get a recipient's recent messages
@@ -71,23 +73,15 @@ $ rails db:migrate
 
 #### Create users to play with
 
-Until the API supports user creation, this creates a few users to play with.
+This creates a few users to play with.
 
 ```
 $ rails db:seed
 ```
 
-By default, it creates on first being run:
+By default, it creates (if run before creating any other users):
 - Bill Murray, id: 1
 - Tina Fey, id: 2
-
-Alternatively, one can create new users by using:
-
-```
-$ rails console
->> User.create(name: 'Amazing Name').save
->> User.all            # Lists all created users
-```
 
 ## To run
 
